@@ -6,8 +6,12 @@
     <title>Angular File Uploads</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js" charset="utf-8"></script>
   </head>
-  <body ng-controller="awsUploadsController">
-    {{2 + 2}}
+  <body ng-controller="awsUploadsController as auc">
+    <img src="default.jpg"  id="preview"/>
+    <br>
+    <input type="file" id="file-input" value="">
+    <br>
+    <button type="button" ng-click="auc.initUpload()">Upload File</button>
     <script src="./main.js"></script>
   </body>
 </html>
