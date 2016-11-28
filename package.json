@@ -1,0 +1,25 @@
+{
+  "name": "aws_node_file_uploads",
+  "version": "1.0.0",
+  "description": "Tutorial to show how to use AWS image uploads in Angular",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GarrettEstrin/angular_aws_uploads.git"
+  },
+  "author": "Garrett Estrin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GarrettEstrin/angular_aws_uploads/issues"
+  },
+  "homepage": "https://github.com/GarrettEstrin/angular_aws_uploads#readme",
+  "dependencies": {
+    "aws-sdk": "^2.7.0",
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "path": "^0.12.7"
+  }
+}
