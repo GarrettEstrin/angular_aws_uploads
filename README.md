@@ -20,11 +20,11 @@ Create a file called ".env" (without the quotes).  If you are going to upload th
 
 In the ".env" file, add the following information exactly as shown:
 
-`AWS_ACCESS_KEY_ID=your-aws-access-key`
-
-`AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key`
-
-`S3_BUCKET=your-bucketname`
+```
+AWS_ACCESS_KEY_ID=your-aws-access-key
+AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key
+S3_BUCKET=your-bucketname
+```
 
 Notice that lack of spaces around the "="s.
 
@@ -46,7 +46,17 @@ vm.initUpload = function(){
   vm.getSignedRequest(file);
 }
 ```
-
+This function gets the file from the file input by selecting the files, which returns an array and then selects the first item in the array:
+```javascript
+file = files[0]
+```
+It then checks if a file was selected and gives an alert if no file was selected:
+```javascript
+if(file == null){
+  return alert('No file selected.');
+}
+```
+This function contacts the server to generate the signed request required by AWS to upload to the bucket.
 ```javascript
 vm.getSignedRequest = function (file){
   const xhr = new XMLHttpRequest();
@@ -68,7 +78,13 @@ vm.getSignedRequest = function (file){
   xhr.send();
 }
 ```
+A get request is sent to /sign-s and sends the file-name and file-type in the url as parameters:
+```javascript
+xhr.open('GET', `/sign-s3?file-name=${file.name}&file-type=${file.type}`);
+```
+These are required by AWS to generate the signed-request.  If information from the file does not match the request generated, the file will not be uploaded.
 
+This is the /sign-s3 route that is called by getSignedRequest function.  This route is defined on the server and is what generates the sign-request.
 ```javascript
 app.get('/sign-s3', function(req, res){
   console.log("sign-s3 hit");
@@ -83,7 +99,7 @@ app.get('/sign-s3', function(req, res){
     ACL: 'public-read'
   };
 
-  s3.getSignedUrl('putObject', s3Params, (err, data) => {
+  s3.getSignedUrl('putObject', s3Params, function(err, data){
     if(err){
       console.log(err);
       return res.end();
@@ -97,9 +113,38 @@ app.get('/sign-s3', function(req, res){
   });
 });
   ```
+The file-name and file-type are set and combined into a new aws object called s3Params to be used to generate the request.
 
 ```javascript
-vm.uploadFile = function (file, signedRequest, url){
+const s3 = new aws.S3();
+const fileName = req.query['file-name'];
+const fileType = req.query['file-type'];
+const s3Params = {
+  Bucket: S3_BUCKET,
+  Key: fileName,
+  Expires: 60,
+  ContentType: fileType,
+  ACL: 'public-read'
+};
+```
+The getSignedUrl method is called and the s3Params object is passed.  The response from this method is the signed request and is passed back to the getSignedRequest function in the client.
+```javascript
+s3.getSignedUrl('putObject', s3Params, function(err, data){
+  if(err){
+    console.log(err);
+    return res.end();
+  }
+  const returnData = {
+    signedRequest: data,
+    url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
+  };
+  res.write(JSON.stringify(returnData));
+  res.end();
+});
+```
+Back in the clinet,
+```javascript
+vm.uploadFile = function(file, signedRequest, url){
   const xhr = new XMLHttpRequest();
   xhr.open('PUT', signedRequest);
   xhr.onreadystatechange = function(){
