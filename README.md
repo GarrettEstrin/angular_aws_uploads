@@ -142,7 +142,7 @@ s3.getSignedUrl('putObject', s3Params, function(err, data){
   res.end();
 });
 ```
-Back in the clinet,
+Back in the client, the signed request is now available to the getSignedRequest function and initiates the uploadFile function.  If no signedRequest is received, an alert is generated stating that fact.
 ```javascript
 vm.uploadFile = function(file, signedRequest, url){
   const xhr = new XMLHttpRequest();
