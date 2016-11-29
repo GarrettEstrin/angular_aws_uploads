@@ -27,7 +27,7 @@ const S3_BUCKET = process.env.S3_BUCKET;
  * Upon request, return JSON containing the temporarily-signed S3 request and
  * the anticipated URL of the image.
  */
-app.get('/sign-s3', (req, res) => {
+app.get('/sign-s3', function(req, res){
   console.log("sign-s3 hit");
   const s3 = new aws.S3();
   const fileName = req.query['file-name'];
