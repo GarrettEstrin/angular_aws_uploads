@@ -37,7 +37,6 @@ In the view, three elements exist: an image tag, with an id of 'preview', that i
 After a file is selected in the view and the upload file button is clicked, a function called "initUpload" is initiated:
 
 ```javascript
-
 vm.initUpload = function(){
   var files = document.getElementById('file-input').files;
   file = files[0];
@@ -45,4 +44,5 @@ vm.initUpload = function(){
     return alert('No file selected.');
   }
   vm.getSignedRequest(file);
-}```
+}
+```
