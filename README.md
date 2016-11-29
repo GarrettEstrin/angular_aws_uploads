@@ -27,3 +27,21 @@ In the ".env" file, add the following information exactly as shown:
 `S3_BUCKET=your-bucketname`
 
 Notice that lack of spaces around the "="s.
+
+The project is now ready to upload files to your AWS bucket.  The view is designed to work with pictures (it shows the picture when it is uploaded) but can be used for any files.
+
+### Code Explanation
+
+In the view, three elements exist: an image tag, with an id of 'preview', that initially shows a default image, an input tag with an id of 'file-input' and a button that initiates a function when it is pressed `ng-click="auc.initUpload()"`
+
+After a file is selected in the view and the upload file button is clicked, a function called "initUpload" is initiated:
+
+```javascript
+vm.initUpload = function(){
+  var files = document.getElementById('file-input').files;
+  file = files[0];
+  if(file == null){
+    return alert('No file selected.');
+  }
+  vm.getSignedRequest(file);
+}```
